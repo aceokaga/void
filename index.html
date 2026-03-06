@@ -6,31 +6,17 @@
 <title>VOID Browser</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:      #000;
-  --s1:      #0a0505;
-  --s2:      #0f0808;
-  --s3:      #160c0c;
-  --s4:      #1e1010;
-  --b1:      #1c1010;
-  --b2:      #2a1515;
-  --b3:      #3a1a1a;
-  --acc:     #ff2222;
-  --acc2:    #ff5555;
-  --aglow:   rgba(255,34,34,0.08);
-  --aring:   rgba(255,34,34,0.22);
-  --txt:     #ececec;
-  --dim:     #5a5a5a;
-  --muted:   #2a1818;
-  --r:       5px;
-  --tabh:    35px;
-  --navh:    46px;
+:root{
+  --bg:#000;--s1:#0a0505;--s2:#0f0808;--s3:#160c0c;--s4:#1e1010;
+  --b1:#1c1010;--b2:#2a1515;--b3:#3a1a1a;
+  --acc:#ff2222;--aglow:rgba(255,34,34,.08);--aring:rgba(255,34,34,.22);
+  --txt:#ececec;--dim:#5a5a5a;--muted:#2a1818;--r:5px;--tabh:35px;--navh:46px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--txt);font-family:'Syne',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;user-select:none}
 
-/* ─ TABS ─ */
-#tab-bar{display:flex;align-items:flex-end;background:var(--bg);padding:5px 6px 0;gap:2px;min-height:calc(var(--tabh) + 5px);border-bottom:1px solid var(--b1);overflow-x:auto;scrollbar-width:none;contain:layout}
+/* TABS */
+#tab-bar{display:flex;align-items:flex-end;background:var(--bg);padding:5px 6px 0;gap:2px;min-height:calc(var(--tabh)+5px);border-bottom:1px solid var(--b1);overflow-x:auto;scrollbar-width:none;contain:layout}
 #tab-bar::-webkit-scrollbar{display:none}
 .tab{display:flex;align-items:center;gap:5px;height:var(--tabh);padding:0 9px 0 10px;background:var(--s2);border:1px solid var(--b1);border-bottom:none;border-radius:var(--r) var(--r) 0 0;cursor:pointer;min-width:120px;max-width:190px;flex-shrink:0;position:relative;transition:background .08s}
 .tab:hover{background:var(--s3)}
@@ -44,7 +30,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Syne',sans-serif;height:
 #newtab{height:var(--tabh);width:30px;background:transparent;border:none;color:#3a2020;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:color .08s}
 #newtab:hover{color:var(--acc)}
 
-/* ─ NAV BAR ─ */
+/* NAV BAR */
 #nav-bar{display:flex;align-items:center;gap:3px;padding:5px 9px;background:var(--s1);border-bottom:1px solid var(--b1);height:var(--navh);position:relative;z-index:50}
 .nb{width:28px;height:28px;background:transparent;border:1px solid transparent;border-radius:var(--r);color:#3a2020;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:color .08s,background .08s,border-color .08s;flex-shrink:0}
 .nb:hover:not(:disabled){color:var(--acc);background:var(--aglow);border-color:var(--b2)}
@@ -53,7 +39,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Syne',sans-serif;height:
 .nb.spin svg{animation:rot .4s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
 
-/* ─ URL / SEARCH BOX ─ */
+/* URL BAR */
 #uw{flex:1;position:relative;display:flex;align-items:center}
 #url{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 32px 5px 32px;outline:none;transition:border-color .12s,box-shadow .12s}
 #url:focus{border-color:var(--acc);box-shadow:0 0 0 1px var(--aring),0 0 16px rgba(255,34,34,.04)}
@@ -65,35 +51,72 @@ body{background:var(--bg);color:var(--txt);font-family:'Syne',sans-serif;height:
 #go:hover{color:var(--acc);background:var(--aglow)}
 #go svg{width:13px;height:13px}
 
-/* ─ AUTOCOMPLETE DROPDOWN ─ */
-#ac{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);overflow:hidden;z-index:999;display:none;box-shadow:0 8px 24px rgba(0,0,0,.7);max-height:260px;overflow-y:auto}
+/* PROXY HEALTH BADGE */
+#px-badge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;border:1px solid var(--b2);color:var(--dim);background:var(--s2);cursor:pointer;flex-shrink:0;white-space:nowrap;transition:border-color .1s,color .1s}
+#px-badge:hover{border-color:var(--b3);color:var(--txt)}
+#px-badge.warn{border-color:#7a3300;color:#ff8800}
+#px-badge.dead{border-color:#5a1010;color:#ff4444}
+
+/* PROXY MODAL */
+#px-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:999;align-items:center;justify-content:center}
+#px-modal.open{display:flex}
+#px-panel{background:var(--s1);border:1px solid var(--b2);border-radius:8px;width:480px;max-width:95vw;padding:20px;display:flex;flex-direction:column;gap:14px}
+.px-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--txt)}
+.px-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);line-height:1.6}
+#px-list{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto}
+.px-row{display:flex;align-items:center;gap:8px;padding:6px 9px;background:var(--s2);border:1px solid var(--b1);border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:10px}
+.px-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.px-dot.ok{background:#44ff88}
+.px-dot.warn{background:#ff8800}
+.px-dot.dead{background:#ff3333}
+.px-dot.idle{background:#333}
+.px-name{flex:1;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.px-stat{color:var(--muted);font-size:9px;flex-shrink:0}
+.px-reset{font-size:9px;padding:1px 5px;background:transparent;border:1px solid var(--b3);border-radius:3px;color:var(--dim);cursor:pointer;transition:color .08s,border-color .08s}
+.px-reset:hover{color:var(--acc);border-color:var(--acc)}
+.px-custom-row{display:flex;gap:6px}
+#px-custom-inp{flex:1;background:var(--s2);border:1px solid var(--b1);border-radius:4px;color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 9px;outline:none;transition:border-color .1s}
+#px-custom-inp:focus{border-color:var(--acc)}
+#px-custom-inp::placeholder{color:var(--muted)}
+.px-btn{padding:5px 12px;background:var(--acc);border:none;border-radius:4px;color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;transition:opacity .08s;white-space:nowrap}
+.px-btn:hover{opacity:.85}
+.px-btn.sec{background:transparent;border:1px solid var(--b2);color:var(--dim)}
+.px-btn.sec:hover{color:var(--txt);border-color:var(--b3)}
+
+/* AUTOCOMPLETE */
+#ac{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);overflow:hidden;z-index:999;display:none;box-shadow:0 8px 24px rgba(0,0,0,.7);max-height:240px;overflow-y:auto}
 #ac.show{display:block}
-.ac-item{display:flex;align-items:center;gap:9px;padding:8px 11px;cursor:pointer;transition:background .06s;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim)}
+.ac-item{display:flex;align-items:center;gap:9px;padding:7px 11px;cursor:pointer;transition:background .05s;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--dim)}
 .ac-item:hover,.ac-item.sel{background:var(--s3);color:var(--txt)}
 .ac-item.sel .ac-main{color:var(--acc)}
 .ac-ico{width:14px;height:14px;flex-shrink:0;opacity:.5;display:flex;align-items:center;justify-content:center}
 .ac-ico svg{width:13px;height:13px}
 .ac-main{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.ac-sub{font-size:10px;color:var(--muted);flex-shrink:0}
-.ac-sep{height:1px;background:var(--b1);margin:2px 0}
+.ac-sub{font-size:9.5px;color:var(--muted);flex-shrink:0;margin-left:4px}
 
-/* ─ STATUS DOT ─ */
+/* STATUS DOT */
 .sdot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .18s}
 .sdot.load{background:#ff8800;animation:blink .6s ease-in-out infinite}
 .sdot.ok{background:var(--acc)}
 .sdot.err{background:#ff3333}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* ─ CONTENT ─ */
+/* CONTENT */
 #content{flex:1;position:relative;overflow:hidden;background:var(--bg)}
 .bframe{position:absolute;inset:0;display:none;flex-direction:column}
 .bframe.active{display:flex}
 .bframe iframe{flex:1;width:100%;border:none;background:#fff}
 
-/* ─ PROGRESS BAR ─ */
+/* PROGRESS */
 #prog{position:absolute;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--acc),rgba(255,80,80,.4));width:0%;z-index:100;pointer-events:none;box-shadow:0 0 10px rgba(255,34,34,.6);display:none;will-change:width}
 
-/* ─ NEW TAB PAGE ─ */
+/* RETRY BANNER */
+.retry-banner{position:absolute;bottom:0;left:0;right:0;background:var(--s1);border-top:1px solid var(--b2);padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff8800;display:flex;align-items:center;gap:10px;z-index:50}
+.retry-banner span{flex:1}
+.retry-banner button{padding:3px 9px;background:transparent;border:1px solid #7a3300;border-radius:3px;color:#ff8800;cursor:pointer;font-family:inherit;font-size:10px;transition:background .08s}
+.retry-banner button:hover{background:rgba(255,136,0,.1)}
+
+/* NEW TAB */
 .ntp{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;background:var(--bg);padding:40px}
 .logo-word{font-family:'Syne',sans-serif;font-size:54px;font-weight:700;letter-spacing:.2em;text-shadow:0 0 40px rgba(255,34,34,.13)}
 .logo-word span{color:var(--acc);text-shadow:0 0 18px rgba(255,34,34,.5)}
@@ -111,7 +134,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Syne',sans-serif;height:
 .ql-ic{font-size:17px}
 .ql-lb{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
 
-/* ─ STATUS BAR ─ */
+/* STATUS BAR */
 #sbar{height:19px;background:var(--bg);border-top:1px solid var(--b1);display:flex;align-items:center;padding:0 9px;gap:7px}
 #stxt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 
@@ -121,19 +144,21 @@ body{background:var(--bg);color:var(--txt);font-family:'Syne',sans-serif;height:
 </head>
 <body>
 
+<!-- TAB BAR -->
 <div id="tab-bar">
   <button id="newtab" title="New Tab (Ctrl+T)" onclick="newTab()">+</button>
 </div>
 
+<!-- NAV BAR -->
 <nav id="nav-bar">
-  <button class="nb" id="bb" title="Back" onclick="navBack()" disabled>
+  <button class="nb" id="bb" title="Back (Alt+←)" onclick="navBack()" disabled>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
   </button>
-  <button class="nb" id="bf" title="Forward" onclick="navForward()" disabled>
+  <button class="nb" id="bf" title="Forward (Alt+→)" onclick="navForward()" disabled>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
   </button>
   <button class="nb" id="br" title="Reload (F5)" onclick="navReload()">
-    <svg id="reload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="23 4 23 10 17 10"/>
       <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
     </svg>
@@ -155,433 +180,547 @@ body{background:var(--bg);color:var(--txt);font-family:'Syne',sans-serif;height:
     <div id="ac"></div>
   </div>
 
+  <button id="px-badge" onclick="openPxModal()" title="Proxy health — click to manage">px</button>
   <div class="sdot" id="sdot"></div>
 </nav>
 
+<!-- CONTENT -->
 <div id="content">
   <div id="prog"></div>
 </div>
 
+<!-- STATUS BAR -->
 <div id="sbar">
   <span id="stxt">void://newtab</span>
+</div>
+
+<!-- PROXY MODAL -->
+<div id="px-modal">
+  <div id="px-panel">
+    <div class="px-title">Proxy Pool</div>
+    <div class="px-sub">
+      VOID races all healthy proxies simultaneously — fastest wins.<br>
+      Rate-limited or failed proxies cool down automatically and retry.
+    </div>
+    <div id="px-list"></div>
+    <div class="px-sub" style="margin-top:4px">Add custom proxy (must accept URL as query param):</div>
+    <div class="px-custom-row">
+      <input id="px-custom-inp" placeholder="https://myproxy.com/fetch?url={URL}" spellcheck="false">
+      <button class="px-btn" onclick="addCustomProxy()">Add</button>
+      <button class="px-btn sec" onclick="closePxModal()">Close</button>
+    </div>
+    <div class="px-sub" style="color:var(--muted)">
+      Tip: Try <b style="color:var(--dim)">https://corsproxy.io/?{URL}</b> or self-host a simple proxy.
+    </div>
+  </div>
 </div>
 
 <script>
 'use strict';
 
-// ─────────────────────────────────────────────
-// PROXIES — raced in parallel; fastest wins
-// ─────────────────────────────────────────────
-const PX = [
-  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
-  u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
-];
+// ══════════════════════════════════════════════════════
+//  PROXY POOL  — health-tracked, cooldown-aware
+// ══════════════════════════════════════════════════════
+// Each entry: { id, build: url=>proxyUrl, fails, coolUntil, lastMs, requests }
+const POOL = [
+  { id:'allorigins',  build: u=>`https://api.allorigins.win/raw?url=${enc(u)}` },
+  { id:'corsproxy',   build: u=>`https://corsproxy.io/?${enc(u)}` },
+  { id:'codetabs',    build: u=>`https://api.codetabs.com/v1/proxy?quest=${enc(u)}` },
+  { id:'htmldriven',  build: u=>`https://htmldriven.com/cors-proxy?url=${enc(u)}` },
+  { id:'thingproxy',  build: u=>`https://thingproxy.freeboard.io/fetch/${u}` },
+  { id:'crossorigin', build: u=>`https://crossorigin.me/${u}` },
+].map(p=>({ ...p, fails:0, coolUntil:0, lastMs:null, requests:0 }));
 
-// ─────────────────────────────────────────────
-// DOM REFS (cached once)
-// ─────────────────────────────────────────────
-const D = {
-  tabBar: document.getElementById('tab-bar'),
-  newTab: document.getElementById('newtab'),
-  url:    document.getElementById('url'),
-  bb:     document.getElementById('bb'),
-  bf:     document.getElementById('bf'),
-  br:     document.getElementById('br'),
-  bri:    document.getElementById('reload-icon'),
-  content:document.getElementById('content'),
-  prog:   document.getElementById('prog'),
-  sdot:   document.getElementById('sdot'),
-  stxt:   document.getElementById('stxt'),
-  ac:     document.getElementById('ac'),
-};
+// User-added custom proxies
+const customPool = [];
 
-// ─────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────
-let tabs = [], activeId = null, tabCtr = 0;
-const aborts = {};   // AbortController per tab
-const cache  = {};   // URL → rewritten HTML (session cache)
+function allProxies() { return [...POOL, ...customPool]; }
 
-// ─────────────────────────────────────────────
-// UTILS
-// ─────────────────────────────────────────────
-const esc  = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const host = u => { try { return new URL(u).hostname; } catch { return u; } };
-const fav  = t => (t||'N')[0].toUpperCase();
-const mkTab= u => ({ id:++tabCtr, url:u||'', title:u?'Loading…':'New Tab', hist:u?[u]:[], hidx:u?0:-1 });
-const getT = id => tabs.find(t=>t.id===id);
+function enc(u){ return encodeURIComponent(u); }
 
-// ─────────────────────────────────────────────
-// RENDER TABS
-// ─────────────────────────────────────────────
-function renderTabs() {
-  D.tabBar.querySelectorAll('.tab').forEach(e=>e.remove());
-  const frag = document.createDocumentFragment();
-  for (const t of tabs) {
-    const el = document.createElement('div');
-    el.className = 'tab' + (t.id===activeId?' active':'');
-    el.dataset.id = t.id;
-    el.innerHTML =
-      `<span class="tab-fav">${fav(t.title)}</span>` +
-      `<span class="tab-title">${esc(t.title)}</span>` +
-      `<button class="tab-x" title="Close">×</button>`;
-    el.addEventListener('click', e=>{ if(!e.target.classList.contains('tab-x')) switchTab(t.id); });
-    el.querySelector('.tab-x').addEventListener('click', e=>{ e.stopPropagation(); closeTab(t.id); });
-    frag.appendChild(el);
-  }
-  D.tabBar.insertBefore(frag, D.newTab);
+// Mark a proxy as failed — exponential backoff cooldown
+function pxFail(px) {
+  px.fails++;
+  // cooldown: 15s, 30s, 60s, 2min, 5min, 10min (capped)
+  const secs = Math.min(600, 15 * Math.pow(2, px.fails - 1));
+  px.coolUntil = Date.now() + secs * 1000;
 }
 
-// ─────────────────────────────────────────────
-// TAB MANAGEMENT
-// ─────────────────────────────────────────────
-function switchTab(id) {
-  activeId = id;
-  D.content.querySelectorAll('.bframe').forEach(f=>f.classList.toggle('active', +f.dataset.tid===id));
-  renderTabs();
-  const t = getT(id);
-  syncNav(t);
-  D.stxt.textContent = t?.url || 'void://newtab';
+// Get healthy proxies (not in cooldown)
+function healthyProxies() {
+  const now = Date.now();
+  return allProxies().filter(p => now >= p.coolUntil);
 }
 
-function newTab(url) {
-  const t = mkTab(url||'');
-  tabs.push(t);
-  const frame = document.createElement('div');
-  frame.className = 'bframe';
-  frame.dataset.tid = t.id;
-  D.content.appendChild(frame);
-  switchTab(t.id);
-  if (url) loadUrl(t.id, url, true);
-  else {
-    frame.innerHTML = ntHTML();
-    requestAnimationFrame(()=>frame.querySelector('.nts')?.focus());
-  }
-}
-
-function closeTab(id) {
-  aborts[id]?.abort(); delete aborts[id];
-  const idx = tabs.findIndex(t=>t.id===id);
-  if (idx===-1) return;
-  tabs.splice(idx,1);
-  D.content.querySelector(`.bframe[data-tid="${id}"]`)?.remove();
-  if (!tabs.length) newTab();
-  else switchTab(tabs[Math.min(idx,tabs.length-1)].id);
-}
-
-function syncNav(t) {
-  D.bb.disabled = !t || t.hidx<=0;
-  D.bf.disabled = !t || t.hidx>=t.hist.length-1;
-  D.url.value   = t?.url || '';
-}
-
-// ─────────────────────────────────────────────
-// URL RESOLUTION
-// ─────────────────────────────────────────────
-function resolveUrl(raw) {
-  raw = raw.trim();
-  if (!raw) return null;
-  if (!raw.includes('.') || raw.includes(' '))
-    return 'https://www.google.com/search?q='+encodeURIComponent(raw);
-  if (!/^https?:\/\//i.test(raw)) raw = 'https://'+raw;
-  try { new URL(raw); return raw; } catch { return null; }
-}
-
-// ─────────────────────────────────────────────
-// NAVIGATION
-// ─────────────────────────────────────────────
-function navigate(val) {
-  const url = resolveUrl(val ?? D.url.value);
-  if (url) { hideAC(); loadUrl(activeId, url, true); }
-}
-function navigateFrom(val) { navigate(val); }
-function navBack() {
-  const t=getT(activeId); if(t&&t.hidx>0){t.hidx--;loadUrl(t.id,t.hist[t.hidx],false);}
-}
-function navForward() {
-  const t=getT(activeId); if(t&&t.hidx<t.hist.length-1){t.hidx++;loadUrl(t.id,t.hist[t.hidx],false);}
-}
-function navReload() {
-  const t=getT(activeId); if(!t?.url) return;
-  D.br.classList.add('spin');
-  loadUrl(t.id,t.url,false);
-}
-
-// ─────────────────────────────────────────────
-// PARALLEL PROXY RACE — fastest proxy wins
-// ─────────────────────────────────────────────
+// Race all healthy proxies — fastest ok response wins, others aborted
 function raceFetch(url, signal) {
-  // Create a race: whichever proxy responds first with ok wins.
-  // Failed proxies are silently dropped; if ALL fail, reject.
   return new Promise((resolve, reject) => {
-    let settled = false, pending = PX.length;
-    for (const px of PX) {
-      fetch(px(url), { signal, cache: 'default' })
+    const candidates = healthyProxies();
+    if (!candidates.length) {
+      // All proxies cooling down — wait for the earliest one
+      const soonest = allProxies().reduce((a,b)=>a.coolUntil<b.coolUntil?a:b);
+      const wait = Math.max(0, soonest.coolUntil - Date.now());
+      reject(new Error(`All proxies cooling down. Try again in ${Math.ceil(wait/1000)}s.`));
+      return;
+    }
+
+    let settled = false, pending = candidates.length;
+    const innerAborts = candidates.map(()=>new AbortController());
+
+    candidates.forEach((px, i) => {
+      const t0 = Date.now();
+      px.requests++;
+      const combinedSignal = combineSignals(signal, innerAborts[i].signal);
+      fetch(px.build(url), { signal: combinedSignal, cache: 'default' })
         .then(r => {
+          const ms = Date.now() - t0;
           if (settled) return;
-          if (r.ok) { settled = true; resolve(r); }
-          else if (--pending === 0) reject(new Error('All proxies returned errors'));
+          if (r.ok) {
+            px.fails = Math.max(0, px.fails - 1); // partial recovery on success
+            px.lastMs = ms;
+            settled = true;
+            // Abort all other in-flight requests
+            innerAborts.forEach((ac,j)=>{ if(j!==i) ac.abort(); });
+            resolve({ response: r, proxy: px });
+          } else {
+            // 429 = rate limit → longer cooldown
+            if (r.status === 429 || r.status === 503) pxFail(px);
+            else if (r.status >= 400) px.fails = Math.min(px.fails+1, 3);
+            if (--pending === 0 && !settled)
+              reject(new Error(`All proxies failed (last: HTTP ${r.status})`));
+          }
         })
         .catch(e => {
-          if (e.name === 'AbortError') { if (!settled) { settled = true; reject(e); } return; }
-          if (--pending === 0 && !settled) reject(new Error('All proxies failed'));
+          if (e.name==='AbortError') { if(!settled&&--pending===0) reject(e); return; }
+          pxFail(px);
+          if (--pending === 0 && !settled)
+            reject(new Error('All proxies failed or are blocked'));
         });
-    }
+    });
   });
 }
 
-// ─────────────────────────────────────────────
-// LOAD URL
-// ─────────────────────────────────────────────
-async function loadUrl(tabId, url, addHistory) {
-  const t = getT(tabId);
-  if (!t) return;
+// Combine two AbortSignals
+function combineSignals(s1, s2) {
+  const ac = new AbortController();
+  const abort = () => ac.abort();
+  s1?.addEventListener('abort', abort, {once:true});
+  s2?.addEventListener('abort', abort, {once:true});
+  if (s1?.aborted || s2?.aborted) ac.abort();
+  return ac.signal;
+}
 
-  // Cancel any existing load for this tab
+// ══════════════════════════════════════════════════════
+//  DOM REFS
+// ══════════════════════════════════════════════════════
+const D = {
+  tabBar:  document.getElementById('tab-bar'),
+  newTab:  document.getElementById('newtab'),
+  url:     document.getElementById('url'),
+  bb:      document.getElementById('bb'),
+  bf:      document.getElementById('bf'),
+  br:      document.getElementById('br'),
+  content: document.getElementById('content'),
+  prog:    document.getElementById('prog'),
+  sdot:    document.getElementById('sdot'),
+  stxt:    document.getElementById('stxt'),
+  ac:      document.getElementById('ac'),
+  pxBadge: document.getElementById('px-badge'),
+  pxModal: document.getElementById('px-modal'),
+  pxList:  document.getElementById('px-list'),
+  pxInp:   document.getElementById('px-custom-inp'),
+};
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let tabs=[], activeId=null, tabCtr=0;
+const aborts={};
+const cache={};  // url → rewritten html
+
+const esc  = s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const host = u=>{ try{return new URL(u).hostname;}catch{return u;} };
+const fav  = t=>(t||'N')[0].toUpperCase();
+const mkTab= u=>({id:++tabCtr,url:u||'',title:u?'Loading…':'New Tab',hist:u?[u]:[],hidx:u?0:-1});
+const getT = id=>tabs.find(t=>t.id===id);
+
+// ══════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════
+function renderTabs() {
+  D.tabBar.querySelectorAll('.tab').forEach(e=>e.remove());
+  const frag=document.createDocumentFragment();
+  for(const t of tabs){
+    const el=document.createElement('div');
+    el.className='tab'+(t.id===activeId?' active':'');
+    el.dataset.id=t.id;
+    el.innerHTML=`<span class="tab-fav">${fav(t.title)}</span><span class="tab-title">${esc(t.title)}</span><button class="tab-x">×</button>`;
+    el.addEventListener('click',e=>{if(!e.target.classList.contains('tab-x'))switchTab(t.id);});
+    el.querySelector('.tab-x').addEventListener('click',e=>{e.stopPropagation();closeTab(t.id);});
+    frag.appendChild(el);
+  }
+  D.tabBar.insertBefore(frag,D.newTab);
+}
+
+function switchTab(id){
+  activeId=id;
+  D.content.querySelectorAll('.bframe').forEach(f=>f.classList.toggle('active',+f.dataset.tid===id));
+  renderTabs();
+  const t=getT(id);
+  syncNav(t);
+  D.stxt.textContent=t?.url||'void://newtab';
+}
+
+function newTab(url){
+  const t=mkTab(url||'');
+  tabs.push(t);
+  const frame=document.createElement('div');
+  frame.className='bframe';
+  frame.dataset.tid=t.id;
+  D.content.appendChild(frame);
+  switchTab(t.id);
+  if(url) loadUrl(t.id,url,true);
+  else{ frame.innerHTML=ntHTML(); requestAnimationFrame(()=>frame.querySelector('.nts')?.focus()); }
+}
+
+function closeTab(id){
+  aborts[id]?.abort(); delete aborts[id];
+  const idx=tabs.findIndex(t=>t.id===id);
+  if(idx===-1)return;
+  tabs.splice(idx,1);
+  D.content.querySelector(`.bframe[data-tid="${id}"]`)?.remove();
+  if(!tabs.length) newTab();
+  else switchTab(tabs[Math.min(idx,tabs.length-1)].id);
+}
+
+function syncNav(t){
+  D.bb.disabled=!t||t.hidx<=0;
+  D.bf.disabled=!t||t.hidx>=t.hist.length-1;
+  D.url.value=t?.url||'';
+}
+
+// ══════════════════════════════════════════════════════
+//  URL RESOLUTION
+// ══════════════════════════════════════════════════════
+function resolveUrl(raw){
+  raw=raw.trim();
+  if(!raw)return null;
+  if(!raw.includes('.')||raw.includes(' '))
+    return 'https://www.google.com/search?q='+encodeURIComponent(raw);
+  if(!/^https?:\/\//i.test(raw))raw='https://'+raw;
+  try{new URL(raw);return raw;}catch{return null;}
+}
+
+// ══════════════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════════════
+function navigate(val){
+  const url=resolveUrl(val??D.url.value);
+  if(url){hideAC();loadUrl(activeId,url,true);}
+}
+function navigateFrom(val){navigate(val);}
+function navBack(){ const t=getT(activeId);if(t&&t.hidx>0){t.hidx--;loadUrl(t.id,t.hist[t.hidx],false);} }
+function navForward(){ const t=getT(activeId);if(t&&t.hidx<t.hist.length-1){t.hidx++;loadUrl(t.id,t.hist[t.hidx],false);} }
+function navReload(){
+  const t=getT(activeId);if(!t?.url)return;
+  D.br.classList.add('spin');
+  delete cache[t.url]; // bust cache on manual reload
+  loadUrl(t.id,t.url,false);
+}
+
+// ══════════════════════════════════════════════════════
+//  LOAD URL
+// ══════════════════════════════════════════════════════
+async function loadUrl(tabId, url, addHistory){
+  const t=getT(tabId); if(!t)return;
   aborts[tabId]?.abort();
-  const ctrl = new AbortController();
-  aborts[tabId] = ctrl;
+  const ctrl=new AbortController();
+  aborts[tabId]=ctrl;
 
-  t.url = url; t.title = 'Loading…';
-  if (addHistory) {
-    t.hist = t.hist.slice(0, t.hidx+1);
+  t.url=url; t.title='Loading…';
+  if(addHistory){
+    t.hist=t.hist.slice(0,t.hidx+1);
     t.hist.push(url);
-    t.hidx = t.hist.length-1;
+    t.hidx=t.hist.length-1;
   }
 
-  if (tabId===activeId) {
-    D.url.value = url;
+  if(tabId===activeId){
+    D.url.value=url;
     syncNav(t);
     dot('load');
-    D.stxt.textContent = 'Loading…';
+    D.stxt.textContent='Loading…';
     progStart();
   }
 
-  const frame = D.content.querySelector(`.bframe[data-tid="${tabId}"]`);
-  if (!frame) return;
+  const frame=D.content.querySelector(`.bframe[data-tid="${tabId}"]`);
+  if(!frame)return;
+  frame.querySelector('.retry-banner')?.remove();
+  frame.innerHTML=spinner();
 
-  // Instant spinner (no layout thrash — just one innerHTML set)
-  frame.innerHTML = spinner();
-
-  try {
-    // Check session cache first
+  try{
     let html;
-    if (cache[url]) {
-      html = cache[url];
+    if(cache[url]){
+      html=cache[url];
     } else {
-      const r = await raceFetch(url, ctrl.signal);
-      const raw = await r.text();
-      if (ctrl.signal.aborted) return;
-      html = rewrite(raw, url);
-      cache[url] = html; // cache rewritten HTML
+      const {response, proxy}=await raceFetch(url, ctrl.signal);
+      const raw=await response.text();
+      if(ctrl.signal.aborted)return;
+      html=rewrite(raw,url);
+      cache[url]=html;
+      // Show which proxy succeeded in status bar briefly
+      if(tabId===activeId) D.stxt.textContent=`via ${proxy.id} · ${proxy.lastMs}ms`;
     }
 
-    if (ctrl.signal.aborted) return;
+    if(ctrl.signal.aborted)return;
 
-    // srcdoc = no extra navigation, no about:blank flash
-    const iframe = document.createElement('iframe');
-    iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups';
-    iframe.srcdoc = html;
-    frame.innerHTML = '';
+    const iframe=document.createElement('iframe');
+    iframe.sandbox='allow-scripts allow-same-origin allow-forms allow-popups';
+    iframe.srcdoc=html;
+    frame.innerHTML='';
     frame.appendChild(iframe);
 
     progStop();
     D.br.classList.remove('spin');
+    updatePxBadge();
 
-    // Non-blocking title extraction
     requestAnimationFrame(()=>setTimeout(()=>{
-      if (ctrl.signal.aborted) return;
-      try { t.title = iframe.contentDocument?.title || host(url); }
-      catch { t.title = host(url); }
-      if (tabId===activeId) { syncNav(t); D.stxt.textContent = url; }
+      if(ctrl.signal.aborted)return;
+      try{t.title=iframe.contentDocument?.title||host(url);}
+      catch{t.title=host(url);}
+      if(tabId===activeId){syncNav(t);D.stxt.textContent=url;}
       renderTabs();
       dot('ok');
-    }, 180));
+    },180));
 
-  } catch(err) {
-    if (err.name==='AbortError') return;
-    t.title = 'Error';
-    frame.innerHTML = errPage(url, err.message);
-    if (tabId===activeId) { syncNav(t); D.stxt.textContent = 'Error'; dot('err'); }
+  } catch(err){
+    if(err.name==='AbortError')return;
+    t.title='Error';
+    D.br.classList.remove('spin');
+    updatePxBadge();
+
+    // Show error page WITH a retry banner
+    frame.innerHTML=errPage(url,err.message);
+    const banner=document.createElement('div');
+    banner.className='retry-banner';
+    banner.innerHTML=`<span>⚠ ${esc(err.message)}</span><button onclick="retryLoad(${tabId},'${url.replace(/'/g,"\\'")}')">Retry</button><button onclick="this.parentElement.remove()">×</button>`;
+    frame.appendChild(banner);
+
+    if(tabId===activeId){syncNav(t);D.stxt.textContent='Error';dot('err');}
     renderTabs();
     progStop();
-    D.br.classList.remove('spin');
   }
 }
 
-// ─────────────────────────────────────────────
-// HTML REWRITER (fast regex path)
-// ─────────────────────────────────────────────
-function rewrite(html, base) {
-  const px = PX[0]; // allorigins as canonical rewrite proxy
-  // Inject base tag immediately after <head
-  html = html.replace(/<head([^>]*)>/i, `<head$1><base href="${esc(base)}">`);
-  // Rewrite resource URLs
-  html = html.replace(/((?:href|src|action)\s*=\s*")(?!#|javascript:|data:|mailto:|void:)([^"]+)"/gi,
-    (m, attr, u) => {
-      try { return `${attr}${px(new URL(u, base).href)}"`; }
-      catch { return m; }
-    });
+function retryLoad(tabId, url){
+  // Reset cooldowns for proxies that have been down long enough
+  const now=Date.now();
+  allProxies().forEach(p=>{ if(now-p.coolUntil<30000) p.coolUntil=0; });
+  loadUrl(tabId, url, false);
+}
+
+// ══════════════════════════════════════════════════════
+//  HTML REWRITER
+// ══════════════════════════════════════════════════════
+function rewrite(html, base){
+  // Use the first healthy proxy for rewrites, or fallback to first in list
+  const px=(healthyProxies()[0]||POOL[0]).build;
+  html=html.replace(/<head([^>]*)>/i,`<head$1><base href="${esc(base)}">`);
+  html=html.replace(/((?:href|src|action)\s*=\s*")(?!#|javascript:|data:|mailto:|void:|blob:)([^"]+)"/gi,
+    (m,attr,u)=>{ try{return `${attr}${px(new URL(u,base).href)}"`;}catch{return m;} });
   return html;
 }
 
-// ─────────────────────────────────────────────
-// PROGRESS BAR
-// ─────────────────────────────────────────────
-function progStart() {
+// ══════════════════════════════════════════════════════
+//  PROGRESS BAR
+// ══════════════════════════════════════════════════════
+function progStart(){
   const b=D.prog;
   b.style.cssText='display:block;transition:none;width:0%';
-  b.offsetWidth; // reflow
+  b.offsetWidth;
   b.style.transition='width 1.4s cubic-bezier(0.06,0.55,0.3,1)';
   b.style.width='68%';
 }
-function progStop() {
+function progStop(){
   const b=D.prog;
   b.style.transition='width 0.14s ease';
   b.style.width='100%';
-  setTimeout(()=>{ b.style.display='none'; b.style.width='0%'; },160);
+  setTimeout(()=>{b.style.display='none';b.style.width='0%';},160);
 }
 
-// ─────────────────────────────────────────────
-// STATUS DOT
-// ─────────────────────────────────────────────
 let dotTimer;
-function dot(s) {
+function dot(s){
   clearTimeout(dotTimer);
   D.sdot.className='sdot '+s;
-  if (s!=='load') dotTimer=setTimeout(()=>D.sdot.className='sdot',1600);
+  if(s!=='load') dotTimer=setTimeout(()=>D.sdot.className='sdot',1600);
 }
 
-// ─────────────────────────────────────────────
-// AUTOCOMPLETE / SEARCH SUGGESTIONS
-// ─────────────────────────────────────────────
-const QUICK = [
-  { label:'Google',       url:'https://www.google.com',          ico:'🔍' },
-  { label:'Wikipedia',    url:'https://www.wikipedia.org',        ico:'📖' },
-  { label:'GitHub',       url:'https://github.com',               ico:'🐙' },
-  { label:'Hacker News',  url:'https://news.ycombinator.com',     ico:'🔶' },
-  { label:'Reddit',       url:'https://www.reddit.com',           ico:'🤖' },
-  { label:'YouTube',      url:'https://www.youtube.com',          ico:'▶️' },
-  { label:'MDN Docs',     url:'https://developer.mozilla.org',    ico:'📝' },
-  { label:'Stack Overflow',url:'https://stackoverflow.com',       ico:'📚' },
+// ══════════════════════════════════════════════════════
+//  PROXY BADGE + MODAL
+// ══════════════════════════════════════════════════════
+function updatePxBadge(){
+  const now=Date.now();
+  const all=allProxies();
+  const healthy=all.filter(p=>now>=p.coolUntil).length;
+  const total=all.length;
+  D.pxBadge.textContent=`px ${healthy}/${total}`;
+  D.pxBadge.className=healthy===0?'dead':healthy<total/2?'warn':'';
+  // Prepend id="px-badge" back (className overwrites it)
+  D.pxBadge.id='px-badge';
+}
+
+// Update badge every 5s to reflect cooldown recovery
+setInterval(updatePxBadge, 5000);
+
+function openPxModal(){
+  renderPxList();
+  D.pxModal.classList.add('open');
+}
+function closePxModal(){ D.pxModal.classList.remove('open'); }
+D.pxModal.addEventListener('click',e=>{ if(e.target===D.pxModal) closePxModal(); });
+
+function renderPxList(){
+  const now=Date.now();
+  D.pxList.innerHTML=allProxies().map((px,i)=>{
+    const cooling=now<px.coolUntil;
+    const secsLeft=cooling?Math.ceil((px.coolUntil-now)/1000):0;
+    const dotCls=cooling?(px.fails>=3?'dead':'warn'):(px.fails===0?'ok':'idle');
+    const stat=cooling?`cooldown ${secsLeft}s`:(px.lastMs?`${px.lastMs}ms`:`${px.requests} req`);
+    return `<div class="px-row">
+      <div class="px-dot ${dotCls}"></div>
+      <span class="px-name">${esc(px.id)}</span>
+      <span class="px-stat">${stat} · fails:${px.fails}</span>
+      <button class="px-reset" onclick="resetProxy(${i})">reset</button>
+    </div>`;
+  }).join('');
+}
+
+function resetProxy(i){
+  const px=allProxies()[i];
+  if(px){px.fails=0;px.coolUntil=0;}
+  renderPxList();
+  updatePxBadge();
+}
+
+function addCustomProxy(){
+  const val=D.pxInp.value.trim();
+  if(!val)return;
+  // Template: must contain {URL}
+  const tmpl=val.includes('{URL}')?val:val+'{URL}';
+  const id='custom-'+Date.now();
+  customPool.push({ id, build:u=>tmpl.replace('{URL}',encodeURIComponent(u)), fails:0, coolUntil:0, lastMs:null, requests:0 });
+  D.pxInp.value='';
+  renderPxList();
+  updatePxBadge();
+}
+
+// ══════════════════════════════════════════════════════
+//  AUTOCOMPLETE
+// ══════════════════════════════════════════════════════
+const QUICK=[
+  {label:'Google',       url:'https://www.google.com',        ico:'🔍'},
+  {label:'Wikipedia',    url:'https://www.wikipedia.org',      ico:'📖'},
+  {label:'GitHub',       url:'https://github.com',             ico:'🐙'},
+  {label:'Hacker News',  url:'https://news.ycombinator.com',   ico:'🔶'},
+  {label:'Reddit',       url:'https://www.reddit.com',         ico:'🤖'},
+  {label:'YouTube',      url:'https://www.youtube.com',        ico:'▶️'},
+  {label:'MDN',          url:'https://developer.mozilla.org',  ico:'📝'},
+  {label:'Stack Overflow',url:'https://stackoverflow.com',     ico:'📚'},
 ];
 
-let acSel = -1, acItems = [];
+let acSel=-1, acItems=[];
 
-function buildAC(val) {
-  val = val.trim();
-  if (!val) { hideAC(); return; }
-
-  const items = [];
-
-  // ① If it looks like a URL, show "go to" option
-  const isUrl = val.includes('.') && !val.includes(' ');
-  if (isUrl) {
-    const full = /^https?:\/\//i.test(val) ? val : 'https://'+val;
-    items.push({ type:'url', label: full, sub:'Navigate', ico:'globe' });
+function buildAC(val){
+  val=val.trim();
+  if(!val){hideAC();return;}
+  const items=[];
+  const isUrl=val.includes('.')&&!val.includes(' ');
+  if(isUrl){
+    const full=/^https?:\/\//i.test(val)?val:'https://'+val;
+    items.push({type:'url',label:full,sub:'Navigate',ico:'globe'});
   }
-
-  // ② Google search (always shown)
-  items.push({ type:'search', label:`Search: ${val}`, sub:'Google', ico:'search',
-    url:`https://www.google.com/search?q=${encodeURIComponent(val)}` });
-
-  // ③ Quick-link matches
-  const lv = val.toLowerCase();
-  for (const q of QUICK) {
-    if (q.label.toLowerCase().includes(lv) || q.url.includes(lv)) {
-      items.push({ type:'quick', label:q.label, sub:q.url, ico:q.ico, url:q.url });
-    }
+  items.push({type:'search',label:`Search: ${val}`,sub:'Google',ico:'search',
+    url:`https://www.google.com/search?q=${encodeURIComponent(val)}`});
+  const lv=val.toLowerCase();
+  for(const q of QUICK){
+    if(q.label.toLowerCase().includes(lv)||q.url.includes(lv))
+      items.push({type:'quick',label:q.label,sub:q.url,ico:q.ico,url:q.url});
   }
-
-  acItems = items; acSel = -1;
-  renderAC();
+  acItems=items;acSel=-1;renderAC();
 }
 
-function renderAC() {
-  if (!acItems.length) { hideAC(); return; }
-  const svgGlobe = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`;
-  const svgSearch=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
-  D.ac.innerHTML = acItems.map((it,i)=>{
-    const sel = i===acSel?' sel':'';
-    const ico = it.ico==='globe' ? svgGlobe : it.ico==='search' ? svgSearch : `<span style="font-size:12px">${it.ico}</span>`;
+const SVG_GLOBE=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`;
+const SVG_SRCH=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+
+function renderAC(){
+  if(!acItems.length){hideAC();return;}
+  D.ac.innerHTML=acItems.map((it,i)=>{
+    const sel=i===acSel?' sel':'';
+    const ico=it.ico==='globe'?SVG_GLOBE:it.ico==='search'?SVG_SRCH:`<span style="font-size:12px">${it.ico}</span>`;
     return `<div class="ac-item${sel}" data-i="${i}"><span class="ac-ico">${ico}</span><span class="ac-main">${esc(it.label)}</span><span class="ac-sub">${esc(it.sub||'')}</span></div>`;
   }).join('');
   D.ac.classList.add('show');
   D.ac.querySelectorAll('.ac-item').forEach(el=>{
-    el.addEventListener('mousedown', e=>{ e.preventDefault(); acChoose(+el.dataset.i); });
+    el.addEventListener('mousedown',e=>{e.preventDefault();acChoose(+el.dataset.i);});
   });
 }
 
-function acChoose(i) {
-  const it = acItems[i]; if (!it) return;
+function acChoose(i){
+  const it=acItems[i];if(!it)return;
   hideAC();
-  if (it.type==='url') navigate(it.label);
-  else navigate(it.url || it.label);
+  navigate(it.type==='url'?it.label:it.url||it.label);
 }
-
-function hideAC() { D.ac.classList.remove('show'); acItems=[]; acSel=-1; }
-
-function acMove(dir) {
-  if (!acItems.length) return;
-  acSel = Math.max(-1, Math.min(acItems.length-1, acSel+dir));
-  // Update URL bar to reflect selection
-  if (acSel>=0) {
-    const it=acItems[acSel];
-    D.url.value = it.type==='url' ? it.label : it.url || it.label;
-  }
+function hideAC(){D.ac.classList.remove('show');acItems=[];acSel=-1;}
+function acMove(dir){
+  if(!acItems.length)return;
+  acSel=Math.max(-1,Math.min(acItems.length-1,acSel+dir));
+  if(acSel>=0){const it=acItems[acSel];D.url.value=it.type==='url'?it.label:it.url||it.label;}
   renderAC();
 }
 
-// URL bar events
-let acDebounce;
-D.url.addEventListener('input', ()=>{
-  clearTimeout(acDebounce);
-  acDebounce = setTimeout(()=>buildAC(D.url.value), 80); // 80ms debounce
+let acTimer;
+D.url.addEventListener('input',()=>{clearTimeout(acTimer);acTimer=setTimeout(()=>buildAC(D.url.value),70);});
+D.url.addEventListener('focus',()=>{if(D.url.value.trim())buildAC(D.url.value);});
+D.url.addEventListener('blur',()=>setTimeout(hideAC,150));
+D.url.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'){e.preventDefault();acMove(1);}
+  else if(e.key==='ArrowUp'){e.preventDefault();acMove(-1);}
+  else if(e.key==='Enter'){e.preventDefault();if(acSel>=0)acChoose(acSel);else{navigate();hideAC();}}
+  else if(e.key==='Escape'){hideAC();D.url.blur();}
+  else if(e.key==='Tab'&&acSel<0&&acItems.length){e.preventDefault();acMove(1);}
 });
-D.url.addEventListener('focus', ()=>{ if(D.url.value.trim()) buildAC(D.url.value); });
-D.url.addEventListener('blur', ()=>setTimeout(hideAC,150));
-D.url.addEventListener('keydown', e=>{
-  if (e.key==='ArrowDown')  { e.preventDefault(); acMove(1); }
-  else if (e.key==='ArrowUp') { e.preventDefault(); acMove(-1); }
-  else if (e.key==='Enter') { e.preventDefault(); if(acSel>=0){acChoose(acSel);}else{navigate();hideAC();} }
-  else if (e.key==='Escape'){ hideAC(); D.url.blur(); }
-  else if (e.key==='Tab')   { if(acSel<0&&acItems.length){ e.preventDefault(); acMove(1); } }
-});
-D.url.addEventListener('mousedown', e=>e.stopPropagation());
+D.url.addEventListener('mousedown',e=>e.stopPropagation());
+document.addEventListener('mousedown',e=>{if(!D.ac.contains(e.target)&&e.target!==D.url)hideAC();});
 
-// ─────────────────────────────────────────────
-// TEMPLATES
-// ─────────────────────────────────────────────
-function spinner() {
+// ══════════════════════════════════════════════════════
+//  TEMPLATES
+// ══════════════════════════════════════════════════════
+function spinner(){
   return `<div style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;flex-direction:column;gap:12px">
     <div style="width:28px;height:28px;border:2px solid #1a0a0a;border-top-color:#ff2222;border-radius:50%;animation:sp .5s linear infinite"></div>
     <style>@keyframes sp{to{transform:rotate(360deg)}}</style>
-    <span style="font-family:JetBrains Mono,monospace;font-size:10px;color:#2a1010;letter-spacing:.1em">fetching…</span>
+    <span style="font-family:JetBrains Mono,monospace;font-size:10px;color:#2a1010;letter-spacing:.1em">racing proxies…</span>
   </div>`;
 }
 
-function errPage(url, msg) {
+function errPage(url,msg){
   return `<div style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;padding:40px">
-    <div style="max-width:450px;text-align:center">
-      <div style="font-size:40px;margin-bottom:16px">⛔</div>
-      <div style="font-family:Syne,sans-serif;font-size:18px;font-weight:700;color:#eee;margin-bottom:7px">Connection Failed</div>
+    <div style="max-width:480px;text-align:center">
+      <div style="font-size:38px;margin-bottom:14px">⛔</div>
+      <div style="font-family:Syne,sans-serif;font-size:17px;font-weight:700;color:#eee;margin-bottom:7px">Failed to Load</div>
       <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:#3a2020;margin-bottom:14px;word-break:break-all">${esc(url)}</div>
-      <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:#ff4444;background:#080303;border:1px solid #1c0a0a;border-radius:4px;padding:10px">${esc(msg)}</div>
-      <div style="font-family:JetBrains Mono,monospace;font-size:10px;color:#2a1818;margin-top:12px">Some sites block proxy access.</div>
+      <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:#ff4444;background:#080303;border:1px solid #1c0a0a;border-radius:4px;padding:10px;margin-bottom:12px">${esc(msg)}</div>
+      <div style="font-family:JetBrains Mono,monospace;font-size:10px;color:#3a2020;line-height:1.7">
+        Some sites block all public proxies.<br>
+        Click <b style="color:#555">px</b> in the nav bar to add a custom proxy or reset cooldowns.
+      </div>
     </div>
   </div>`;
 }
 
-function ntHTML() {
-  const qls = QUICK.map(q=>
-    `<a class="ql" onclick="navigateFrom('${q.url}')"><span class="ql-ic">${q.ico}</span><span class="ql-lb">${q.label}</span></a>`
-  ).join('');
+function ntHTML(){
+  const qls=QUICK.map(q=>`<a class="ql" onclick="navigateFrom('${q.url}')"><span class="ql-ic">${q.ico}</span><span class="ql-lb">${q.label}</span></a>`).join('');
   return `<div class="ntp">
-    <div>
-      <div class="logo-word">V<span>O</span>ID</div>
-      <div class="logo-sub">proxy browser</div>
-    </div>
+    <div><div class="logo-word">V<span>O</span>ID</div><div class="logo-sub">proxy browser</div></div>
     <div class="nts-wrap">
       <input class="nts" type="text" placeholder="Search or enter URL…" autocomplete="off" spellcheck="false"
         onkeydown="if(event.key==='Enter')navigateFrom(this.value)">
@@ -595,24 +734,22 @@ function ntHTML() {
   </div>`;
 }
 
-// ─────────────────────────────────────────────
-// KEYBOARD SHORTCUTS
-// ─────────────────────────────────────────────
-document.addEventListener('keydown', e=>{
-  if (e.ctrlKey && e.key==='t')      { e.preventDefault(); newTab(); }
-  if (e.ctrlKey && e.key==='w')      { e.preventDefault(); closeTab(activeId); }
-  if (e.ctrlKey && e.key==='l')      { e.preventDefault(); D.url.select(); D.url.focus(); }
-  if (e.altKey  && e.key==='ArrowLeft')  { e.preventDefault(); navBack(); }
-  if (e.altKey  && e.key==='ArrowRight') { e.preventDefault(); navForward(); }
-  if (e.key==='F5')                  { e.preventDefault(); navReload(); }
+// ══════════════════════════════════════════════════════
+//  KEYBOARD SHORTCUTS
+// ══════════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey&&e.key==='t'){e.preventDefault();newTab();}
+  if(e.ctrlKey&&e.key==='w'){e.preventDefault();closeTab(activeId);}
+  if(e.ctrlKey&&e.key==='l'){e.preventDefault();D.url.select();D.url.focus();}
+  if(e.altKey&&e.key==='ArrowLeft'){e.preventDefault();navBack();}
+  if(e.altKey&&e.key==='ArrowRight'){e.preventDefault();navForward();}
+  if(e.key==='F5'){e.preventDefault();navReload();}
 });
 
-// Close autocomplete when clicking outside
-document.addEventListener('mousedown', e=>{ if(!D.ac.contains(e.target)&&e.target!==D.url) hideAC(); });
-
-// ─────────────────────────────────────────────
-// BOOT
-// ─────────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════════════════
+updatePxBadge();
 newTab();
 </script>
 </body>
